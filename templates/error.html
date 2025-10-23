@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #f44336;">❌ Error</h1>
+
+        <div class="error-box">
+            <h3>An error occurred during calculation:</h3>
+            <p style="background: #ffebee; padding: 20px; border-radius: 8px; color: #c62828; font-family: monospace;">
+                {{ error }}
+            </p>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <p><strong>Common causes:</strong></p>
+            <ul style="text-align: left; margin-left: 20px;">
+                <li>Invalid input values (negative depths, zero discharge, etc.)</li>
+                <li>No solution exists for the given parameters</li>
+                <li>Numerical solver failed to converge</li>
+            </ul>
+        </div>
+
+        <button onclick="window.location.href='/'">← Go Back</button>
+    </div>
+</body>
+</html>

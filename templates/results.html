@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Calculation Results</h1>
+
+        <div class="input-summary">
+            <h3>Input Parameters</h3>
+            {% for key, value in inputs.items() %}
+            <div class="input-item">
+                <span><strong>{{ key }}:</strong></span>
+                <span>{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="results-grid">
+            {% for key, value in results.items() %}
+            <div class="result-card">
+                <div class="result-label">{{ key }}</div>
+                <div class="result-value">
+                    {% if value is number %}
+                        {{ "%.4f"|format(value) }}
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button onclick="window.location.href='/'">← Calculate Another Problem</button>
+    </div>
+</body>
+</html>
