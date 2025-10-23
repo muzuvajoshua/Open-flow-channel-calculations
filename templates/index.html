@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Channel Flow Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Open Channel Flow Calculator</h1>
+        <p class="subtitle">Professional Hydraulic Engineering Tool</p>
+
+        <div id="calcSelection">
+            <h2 style="margin-bottom: 20px; color: #333;">Select Calculation Type:</h2>
+            <div class="calc-type-grid">
+                <div class="calc-card" onclick="showForm('normal')">
+                    <h3>📏 Normal & Critical Depth</h3>
+                    <p>Calculate flow depths and Froude number</p>
+                </div>
+                <div class="calc-card" onclick="showForm('jump')">
+                    <h3>⚡ Hydraulic Jump</h3>
+                    <p>Sequent depth and energy loss</p>
+                </div>
+                <div class="calc-card" onclick="showForm('weir')">
+                    <h3>🚧 Weir Analysis</h3>
+                    <p>Flow over broad-crested weirs</p>
+                </div>
+                <div class="calc-card" onclick="showForm('gate')">
+                    <h3>🚪 Sluice Gate</h3>
+                    <p>Discharge and gate forces</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Normal Depth Form -->
+        <div id="normalForm" class="form-section">
+            <button class="back-btn" onclick="showSelection()">← Back to Selection</button>
+            <h2 style="margin-bottom: 20px; color: #333;">Normal & Critical Depth Calculation</h2>
+            <div class="info-text">
+                Calculate normal depth, critical depth, Froude number, and flow regime for uniform flow conditions.
+            </div>
+            <form action="/calculate/normal" method="post">
+                <div class="form-group">
+                    <label>Channel Type:</label>
+                    <select name="channel_type" onchange="updateChannelParams(this.value)" required>
+                        <option value="rectangular">Rectangular</option>
+                        <option value="trapezoidal">Trapezoidal</option>
+                        <option value="circular">Circular (Pipe)</option>
+                        <option value="triangular">Triangular</option>
+                        <option value="wide">Wide Channel</option>
+                        <option value="compound">Compound (River with Floodplains)</option>
+                    </select>
+                </div>
+                <div id="channelParams" class="channel-params">
+                    <div class="form-group">
+                        <label>Width (m):</label>
+                        <input type="number" step="any" name="width" value="5.0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Discharge Q (m³/s):</label>
+                    <input type="number" step="any" name="Q" value="20.0" required>
+                </div>
+                <div class="form-group">
+                    <label>Slope S (m/m):</label>
+                    <input type="number" step="any" name="S" value="0.001" required>
+                </div>
+                <div class="form-group">
+                    <label>Manning's n:</label>
+                    <input type="number" step="any" name="n" value="0.015" required>
+                </div>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+
+        <!-- Hydraulic Jump Form -->
+        <div id="jumpForm" class="form-section">
+            <button class="back-btn" onclick="showSelection()">← Back to Selection</button>
+            <h2 style="margin-bottom: 20px; color: #333;">Hydraulic Jump Analysis</h2>
+            <div class="info-text">
+                Calculate sequent depth, energy loss, and other properties of a hydraulic jump.
+            </div>
+            <form action="/calculate/jump" method="post">
+                <div class="form-group">
+                    <label>Channel Type:</label>
+                    <select name="channel_type" onchange="updateJumpParams(this.value)" required>
+                        <option value="rectangular">Rectangular</option>
+                        <option value="trapezoidal">Trapezoidal</option>
+                        <option value="triangular">Triangular</option>
+                        <option value="compound">Compound (River with Floodplains)</option>
+                    </select>
+                </div>
+                <div id="jumpChannelParams" class="channel-params">
+                    <div class="form-group">
+                        <label>Width (m):</label>
+                        <input type="number" step="any" name="width" value="3.0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Discharge Q (m³/s):</label>
+                    <input type="number" step="any" name="Q" value="13.0" required>
+                </div>
+                <div class="form-group">
+                    <label>Upstream Depth y₁ (m):</label>
+                    <input type="number" step="any" name="y1" value="0.3" required>
+                </div>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+
+        <!-- Weir Form -->
+        <div id="weirForm" class="form-section">
+            <button class="back-btn" onclick="showSelection()">← Back to Selection</button>
+            <h2 style="margin-bottom: 20px; color: #333;">Broad-Crested Weir Analysis</h2>
+            <div class="info-text">
+                Calculate upstream depth for flow over a broad-crested weir.
+            </div>
+            <form action="/calculate/weir" method="post">
+                <div class="form-group">
+                    <label>Channel Type:</label>
+                    <select name="channel_type" onchange="updateWeirParams(this.value)" required>
+                        <option value="rectangular">Rectangular</option>
+                        <option value="wide">Wide Channel</option>
+                    </select>
+                </div>
+                <div id="weirChannelParams" class="channel-params">
+                    <div class="form-group">
+                        <label>Width (m):</label>
+                        <input type="number" step="any" name="width" value="3.0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Discharge Q (m³/s):</label>
+                    <input type="number" step="any" name="Q" value="1.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Weir Height P (m):</label>
+                    <input type="number" step="any" name="weir_height" value="0.2" required>
+                </div>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+
+        <!-- Sluice Gate Form -->
+        <div id="gateForm" class="form-section">
+            <button class="back-btn" onclick="showSelection()">← Back to Selection</button>
+            <h2 style="margin-bottom: 20px; color: #333;">Sluice Gate Analysis</h2>
+            <div class="info-text">
+                Calculate discharge under a sluice gate given upstream and downstream depths.
+            </div>
+            <form action="/calculate/gate" method="post">
+                <div class="form-group">
+                    <label>Channel Width (m):</label>
+                    <input type="number" step="any" name="width" value="3.0" required>
+                </div>
+                <div class="form-group">
+                    <label>Upstream Depth (m):</label>
+                    <input type="number" step="any" name="y_upstream" value="2.0" required>
+                </div>
+                <div class="form-group">
+                    <label>Downstream Depth (m):</label>
+                    <input type="number" step="any" name="y_downstream" value="0.3" required>
+                </div>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
